@@ -24,17 +24,57 @@ In timing diagram Q0 is changing as soon as the negative edge of clock pulse is 
 
 **Procedure**
 
+    1.Increment count on each positive edge of the clock. 
+    2.Reset count to zero when it reaches 15. 
+    3.Generate clock signal (clk). 
+    4.Instantiate the RippleCounter module. 
+    5.Conduct functional testing by displaying the count at each clock cycle for 16 cycles.
+
 /* write all the steps invloved */
 
 **PROGRAM**
 
+    module ripple (
+    input clk,     // Clock input
+    input reset,   // Reset input (active high)
+    output [3:0] q // 4-bit output
+    );
+    reg [3:0] q_int;
+    assign q = q_int;
+    always @(posedge clk or posedge reset) begin
+           if (reset) 
+             q_int[0] <= 1'b0; // Reset the first bit to 0
+           else 
+              q_int[0] <= ~q_int[0]; // Toggle the first bit on clock edge
+    end
+    genvar i;
+    generate
+        for (i = 1; i < 4; i = i + 1) begin : ripple
+            always @(posedge q_int[i-1] or posedge reset) begin
+                if (reset) 
+                   q_int[i] <= 1'b0; // Reset the bit to 0
+                else 
+                   q_int[i] <= ~q_int[i]; // Toggle the bit on clock edge of previous stage
+            end
+        end
+    endgenerate
+    endmodule
+
 /* Program for 4 Bit Ripple Counter and verify its truth table in quartus using Verilog programming.
 
- Developed by: RegisterNumber:
+ Developed by:HARSHUL SL RegisterNumber:24900455
 */
 
 **RTL LOGIC FOR 4 Bit Ripple Counter**
 
+![image](https://github.com/user-attachments/assets/4d2228bb-2f4f-4407-b427-12bed09b0e9f)
+
+
 **TIMING DIGRAMS FOR 4 Bit Ripple Counter**
 
+![image](https://github.com/user-attachments/assets/eae82b89-8ca8-406d-ab56-716557d7051c)
+
+
 **RESULTS**
+
+The 4 bit ripple counter is verified
